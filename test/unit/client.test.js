@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash'),
+    Promise = require('bluebird'),
     amqp = require('../../lib'),
     chai = require('chai'),
     expect = chai.expect,
