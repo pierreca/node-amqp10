@@ -1,7 +1,7 @@
 'use strict';
 
 var builder = require('buffer-builder'),
-
+    Promise = require('bluebird'),
     constants = require('../../lib/constants'),
     frames = require('../../lib/frames'),
     DefaultPolicy = require('../../lib').Policy.Default,
