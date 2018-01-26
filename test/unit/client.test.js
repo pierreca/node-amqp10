@@ -807,7 +807,7 @@ describe('Client', function() {
       });
 
       var saslHandler = {
-        getInitFrameContent: function() {
+        getInitFrame: function() {
           return new Promise(function(resolve) {
             initOK = true;
             resolve({
@@ -816,11 +816,11 @@ describe('Client', function() {
             });
           });
         },
-        getChallengeResponseContent: function(challengeFrame) {
+        getResponseFrame: function(challengeFrame) {
           return new Promise(function(resolve) {
             challengeOK = true;
             expect(challengeFrame[0].value.toString()).to.equal(expectedChallenge);
-            resolve(expectedChallengeResponse);
+            resolve({ response: expectedChallengeResponse });
           });
         }
       };

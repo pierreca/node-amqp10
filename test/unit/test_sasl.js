@@ -90,7 +90,7 @@ describe('Sasl', function() {
       connection.open({protocol: 'amqp', host: 'localhost', port: server.port, user: 'user', pass: 'pass'}, new Sasl('PLAIN', new SaslPlain()));
     });
 
-    it('should use the saslHandler passed to the constructor for the init frame', function (done) {
+    it('should use the saslHandler passed to the constructor', function (done) {
       var expectedSaslMechanism = 'TEST';
       var expectedInitialAnswer = new Buffer('initialAnswer');
       var expectedChallenge = new Buffer('challenge');
@@ -98,7 +98,8 @@ describe('Sasl', function() {
 
       var expectedSaslInitFrame = new frames.SaslInitFrame({
         mechanism: expectedSaslMechanism,
-        initialResponse: expectedInitialAnswer
+        initialResponse: expectedInitialAnswer,
+        hostname: 'host'
       });
 
       var expectedSaslChallengeResponseFrame = new frames.SaslResponseFrame({
@@ -106,18 +107,19 @@ describe('Sasl', function() {
       });
 
       var saslHandler = {
-        getInitFrameContent: function (credentials) {
+        getInitFrame: function (credentials) {
           return new Promise(function (resolve) {
             resolve({
               mechanism: expectedSaslMechanism,
-              initialResponse: expectedInitialAnswer
+              initialResponse: expectedInitialAnswer,
+              hostname: 'host'
             });
           });
         },
-        getChallengeResponseContent: function (challenge) {
+        getResponseFrame: function (challenge) {
           expect(challenge[0].value.toString()).to.equal(expectedChallenge.toString());
           return new Promise(function (resolve) {
-            resolve(expectedChallengeResponse);
+            resolve({ response: expectedChallengeResponse });
           });
         }
       };

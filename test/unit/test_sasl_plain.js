@@ -7,25 +7,15 @@ var builder = require('buffer-builder'),
     expect = require('chai').expect;
 
 describe('SaslPlain', function () {
-  describe('getInitFrameContent', function () {
+  describe('getInitFrame', function () {
     it('should return a well formed content object', function (done) {
       var saslHandler = new SaslPlain();
-      saslHandler.getInitFrameContent({ user: 'user', pass: 'pass' }).then(function (initContent) {
+      saslHandler.getInitFrame({ user: 'user', pass: 'pass' }).then(function (initContent) {
         expect(initContent.mechanism).to.equal('PLAIN');
         var expectedBuffer = tu.buildBuffer([0, builder.prototype.appendString, 'user', 0, builder.prototype.appendString, 'pass']);
         for(var i = 0; i < expectedBuffer.length; i++) {
           expect(initContent.initialResponse[i]).to.equal(expectedBuffer[i]);
         }
-        done();
-      });
-    });
-  });
-
-  describe('getChallengeResponse', function () {
-    it('should return undefined', function (done) {
-      var saslHandler = new SaslPlain();
-      saslHandler.getChallengeResponseContent().then(function (response) {
-        expect(response).to.equal(undefined);
         done();
       });
     });
